@@ -1,0 +1,2 @@
+D:/ProjectFiles/srkmatrimonial/android/app/.cxx/Debug/652n2x52/x86_64/CMakeFiles/edit_cache.dir
+D:/ProjectFiles/srkmatrimonial/android/app/.cxx/Debug/652n2x52/x86_64/CMakeFiles/rebuild_cache.dir
