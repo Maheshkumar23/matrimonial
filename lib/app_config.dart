@@ -4,7 +4,7 @@ class AppConfig {
   static String copyright_text =
       "@ ActiveItZone " + this_year; //it will show in your splash screen
   static String app_name =
-      "ACTIVE MATRIMONIAL"; //it will show in your splash screen
+      "SRK MATRIMONIAL"; //it will show in your splash screen
 
   // enter string purchase_code here
   static String purshase_code = '2c55992a-9be2-4050-b802-417300aff65a';
