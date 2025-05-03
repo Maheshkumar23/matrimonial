@@ -5,12 +5,41 @@ import 'package:active_matrimonial_flutter_app/helpers/aiz_api_request.dart';
 import 'package:active_matrimonial_flutter_app/helpers/main_helpers.dart';
 import 'package:active_matrimonial_flutter_app/models_response/auth/signin_response.dart';
 import 'package:active_matrimonial_flutter_app/models_response/common_models/user.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
 import '../helpers/shared_pref.dart';
 import '../models_response/others/common_response.dart';
 
 class AuthRepository {
+
+  // Future<SignInResponse?> signIn(loginParameter ? loginParams) async {
+  //
+  //   Map<String, dynamic> map = {};
+  //
+  //   map['email_or_phone'] = loginParams?.email;
+  //   map['password'] = loginParams?.password;
+  //
+  //   var baseUrl = "${AppConfig.BASE_URL}/signin";
+  //
+  //   var response = await http.post(Uri.parse(baseUrl),
+  //      headers: {
+  //       "Accept": "application/json",
+  //       "Content-Type": "application/json",
+  //       },
+  //       body: ApiHelperMethod.serialize(map));
+  //
+  //   try {
+  //     if (response.statusCode == 200) {
+  //       return SignInResponse.fromJson(jsonDecode(response.body));
+  //     }
+  //   } catch (e) {
+  //     throw Exception('failed to load');
+  //   }
+  //
+  //   return SignInResponse();
+  // }
+
   Future<SignInResponse?> signIn({email, password}) async {
     var baseUrl = "${AppConfig.BASE_URL}/signin";
     var postBody = jsonEncode({
@@ -254,5 +283,114 @@ class AuthRepository {
     // print(response.body);
     var data = userFromJson(response.body);
     return data;
+  }
+}
+
+
+class ApiHelperMethod {
+  @protected
+  static String serialize(Object? obj) {
+    String serialized = '';
+    if (obj == null) {
+      serialized = '';
+    } else {
+      serialized = json.encode(obj);
+    }
+    return serialized;
+  }
+
+  @protected
+  ErrorResponse handleConnectionError() {
+    var result = ErrorResponse();
+    result.statusCode = 502;
+    result.message = "There is a problem connecting to the server.";
+    return result;
+  }
+
+  @protected
+  Future<ErrorResponse?> handleApiError(
+      http.Response response, bool tokenError) async {
+    if ((tokenError && response.statusCode == 400) ||
+        response.statusCode == 401) {
+      return null;
+    }
+
+    Map<String, dynamic>? responseJObject;
+    if (_isJsonResponse(response)) {
+      responseJObject = json.decode(response.body);
+    }
+    return ErrorResponse.fromResponse(
+        responseJObject, response.statusCode, tokenError);
+  }
+
+  bool _isJsonResponse(http.Response response) {
+    return (response.headers["content-type"]?.contains("json")) == true;
+  }
+}
+
+class ErrorResponse {
+
+  String? message;
+  Map<String, List<String>>? validationErrors;
+  int? statusCode;
+
+  ErrorResponse();
+
+  ErrorResponse.fromResponse(Map<String, dynamic>? response, int statusCode, [bool identityResponse = false]) {
+    var errorModel;
+    if (response != null) {
+      if (response.containsKey("error")) {
+        errorModel = _ErrorModel.fromJson(response["error"]);
+      }
+      else {
+        print("dfsssfsfs");
+        errorModel = _ErrorModel.fromJson(response);
+      }
+    }
+    if (errorModel != null) {
+      message = errorModel.message;
+      validationErrors = errorModel.errors;
+    }
+    statusCode = statusCode;
+  }
+
+  String getSingleMessage() {
+    print(message);
+    if (validationErrors == null) {
+      return message ?? '';
+    }
+    return message ?? '';
+  }
+  @override
+  String toString() {
+    return message ?? '' + getSingleMessage();
+  }
+}
+
+class _ErrorModel {
+
+  String? message;
+  Map<String, List<String>>? errors;
+
+  _ErrorModel.fromJson(Map<String, dynamic> json) {
+    errors =  Map<String, List<String>>();
+
+    /* if (json['message'] is List) {
+      message = (json['message'] as List)?.first ?? "No Message";
+    }*/
+    if (json["message"] is List<dynamic>) {
+      List data = json["message"] as List<dynamic>;
+      message = data[0].toString();
+    }
+    else if (json['message'] is String) {
+      message = json['message'];
+    }
+
+    if (json['error']!=null){
+      for (var key in json['error'].keys) {
+        errors?[key] = List<String>.from(json['error'][key]);
+      }
+    }
+
   }
 }

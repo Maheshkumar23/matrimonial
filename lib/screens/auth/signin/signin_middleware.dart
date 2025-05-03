@@ -1,5 +1,6 @@
 import 'package:active_matrimonial_flutter_app/const/my_theme.dart';
 import 'package:active_matrimonial_flutter_app/helpers/auth_helper.dart';
+import 'package:active_matrimonial_flutter_app/models_response/auth/signin_response.dart';
 import 'package:active_matrimonial_flutter_app/repository/auth_repository.dart';
 import 'package:active_matrimonial_flutter_app/screens/auth/signin/signin_action.dart';
 import 'package:active_matrimonial_flutter_app/screens/core.dart';
@@ -15,7 +16,7 @@ ThunkAction<AppState> signInMiddleware({email, password, from, context}) {
   return (Store<AppState> store) async {
     store.dispatch(SignInAction(from: from));
     var data =
-        (await AuthRepository().signIn(email: email, password: password))!;
+        (await AuthRepository().signIn(email: email,password: password))!;
 
     if (data.result == true) {
       /// setting auth user data

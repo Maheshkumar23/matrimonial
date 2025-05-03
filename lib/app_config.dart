@@ -7,12 +7,12 @@ class AppConfig {
       "ACTIVE MATRIMONIAL"; //it will show in your splash screen
 
   // enter string purchase_code here
-  static String purshase_code = 'your_purchase_code';
+  static String purshase_code = '2c55992a-9be2-4050-b802-417300aff65a';
 
   // configure this
   static const bool HTTPS = true; //if you are using localhost set it to false
 
-  static const DOMAIN_PATH = "demo.activeitzone.com/matrimonial";
+  static const DOMAIN_PATH = "matri.srkwebappinnovations.com";
   // do not configure these below
   static const String API_ENDPATH = "api";
   static const String PROTOCOL = HTTPS ? "https://" : "http://";

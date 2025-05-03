@@ -50,3 +50,12 @@ class SignInResponse {
 // User, do
 
 
+class loginParameter{
+  String? email;
+  String? password;
+
+  loginParameter({
+    this.email,
+    this.password
+});
+}
